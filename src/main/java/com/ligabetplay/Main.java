@@ -1,8 +1,6 @@
 package com.ligabetplay;
 
 import java.io.IOException;
-import java.text.MessageFormat;
-// import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -16,6 +14,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import com.ligabetplay.staticvar.Autoincrement;
+import com.ligabetplay.torneo.Player;
 import com.ligabetplay.torneo.Team;
 
 public class Main {
@@ -25,7 +24,7 @@ public class Main {
         Team team;
         Autoincrement.uniqueNumbers = new HashSet<>();
 
-        String miMenu = "1. Add Team\n2. View teams\n3. List panel\n4. Add Player\n5. Quit";
+        String miMenu = "1. Add Team\n2. View teams\n3. List panel\n4. Add Player\n5. List players by team\n6. Quit";
         int opcion;
         String leftAlignFormat = "| %-4d | %-40s |%n";
 
@@ -58,7 +57,27 @@ public class Main {
                 case 3:
                     showTeamsTable(teams);
                     break;
+                case 4:
+                    
+                    int codTeam = Integer.parseInt(JOptionPane.showInputDialog(null,"Ingrese el codigo del equipo"));
+                    team = teams.get(codTeam);
+                    do{
+                        Player myPlayer = new Player();
+                        myPlayer.setId(GenerateUnique());
+                        myPlayer.setName(JOptionPane.showInputDialog(null,"Ingrese el Nombre del jugador"));
+                        myPlayer.setLastName(JOptionPane.showInputDialog(null,"Ingrese el Apellido del jugador"));
+                        myPlayer.setAge(Integer.parseInt(JOptionPane.showInputDialog(null,"Ingrese la edad")));
+                        myPlayer.setNumber(Integer.parseInt(JOptionPane.showInputDialog(null,"Ingrese la dorsal de juego")));
+                        myPlayer.setFieldPosition(JOptionPane.showInputDialog(null,"Ingrese la posicion de juego"));
+                        team.setPlayer(myPlayer);
+
+                    }while(JOptionPane.showConfirmDialog(null, "Desea ingresar otro jugador", 
+                    "Confirmacion",JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == 0);
+                    break;
                 case 5:
+                    showPlayersTable(teams);
+                    break;
+                case 6:
                     JOptionPane.showMessageDialog(null, "Gracias por usar nuestro servicios", "Informacion",
                             JOptionPane.INFORMATION_MESSAGE);
                     break;
@@ -68,7 +87,7 @@ public class Main {
                     break;
             }
 
-        } while (opcion != 5);
+        } while (opcion != 6);
         // team.setId(valueNumber);
         // team.setNameTeam(JOptionPane.showInputDialog(null, "Ingrese el nombre del
         // equipo"));
@@ -120,6 +139,22 @@ public class Main {
             model.addRow(row);
         });
 
+        JTable table = new JTable(model);
+        JScrollPane scrollPane = new JScrollPane(table);
+        JPanel panel = new JPanel();
+        panel.add(scrollPane);
+
+        JOptionPane.showMessageDialog(null, panel, "Teams List", JOptionPane.PLAIN_MESSAGE);
+    }
+    public static void showPlayersTable(Hashtable<Integer, Team> teams) {
+        int codTeam = Integer.parseInt(JOptionPane.showInputDialog(null,"Ingrese el codigo del equipo"));
+        Team team = teams.get(codTeam);
+        String[] columns = { "ID", "Player Name","Player Last Name","Field Position","Jersey"};
+        DefaultTableModel model = new DefaultTableModel(columns, 0);
+        for(Player myPlayer: team.getPlayer()){
+            Object[] row = { myPlayer.getId(), myPlayer.getName(),myPlayer.getLastName(),myPlayer.getFieldPosition(),myPlayer.getNumber() };
+            model.addRow(row);
+        }
         JTable table = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(table);
         JPanel panel = new JPanel();
