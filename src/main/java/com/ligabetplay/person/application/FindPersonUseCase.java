@@ -1,5 +1,7 @@
 package com.ligabetplay.person.application;
 
+import java.util.Optional;
+
 import com.ligabetplay.person.domain.entity.Person;
 import com.ligabetplay.person.domain.service.PersonService;
 
@@ -10,7 +12,7 @@ public class FindPersonUseCase {
         this.personService = personService;
     }
 
-    public Person execute(String id) {
+    public Optional<Person> execute(String id) {
         return personService.findPersonById(id);
     }
 }

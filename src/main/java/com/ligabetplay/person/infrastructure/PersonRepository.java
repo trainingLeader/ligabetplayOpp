@@ -8,9 +8,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
-import java.sql.Statement;
 
 import com.ligabetplay.person.domain.entity.Person;
+import com.ligabetplay.person.domain.entity.PersonaDto;
 import com.ligabetplay.person.domain.service.PersonService;
 
 public class PersonRepository implements PersonService {
@@ -59,7 +59,7 @@ public class PersonRepository implements PersonService {
     }
 
     @Override
-    public Person findPersonById(String id) {
+    public Optional<Person> findPersonById(String id) {
         String query = "SELECT id, nombre, apellido, email, edad, idciudad FROM persona WHERE id = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(query);
@@ -67,19 +67,39 @@ public class PersonRepository implements PersonService {
             try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
                         Person person = new Person(rs.getString("id"), rs.getString("nombre"), rs.getString("apellido"), rs.getInt("edad"), rs.getString("email"), rs.getInt("idciudad"));
-                        return person;
+                        return Optional.of(person);
                     }
                 }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
     public List<Person> findAllPerson() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'findAllPerson'");
+    }
+
+    @Override
+    public Optional<PersonaDto> findPersonByIdCiudad(String id) {
+        String query = "SELECT p.id, p.nombre, p.apellido, p.email, p.edad, p.idciudad,c.nombre " +
+                        "FROM persona as p " + 
+                        "join ciudad as c on p.idciudad = c.id WHERE p.id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        PersonaDto person = new PersonaDto(rs.getString("p.id"), rs.getString("p.nombre"), rs.getString("p.apellido"), rs.getInt("p.edad"), rs.getString("p.email"), rs.getString("c.nombre"));
+                        return Optional.of(person);
+                    }
+                }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
     }
 
 }

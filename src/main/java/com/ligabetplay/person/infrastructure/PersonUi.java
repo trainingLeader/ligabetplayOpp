@@ -1,21 +1,24 @@
 package com.ligabetplay.person.infrastructure;
 
-import java.util.Scanner;
+import java.util.Optional;
 
 import javax.swing.JOptionPane;
-
 import com.ligabetplay.person.application.CreatePersonUseCase;
+import com.ligabetplay.person.application.FindPersonCiudad;
 import com.ligabetplay.person.application.FindPersonUseCase;
 import com.ligabetplay.person.domain.entity.Person;
+import com.ligabetplay.person.domain.entity.PersonaDto;
 
 public class PersonUi {
     private  CreatePersonUseCase createPersonUseCase;
     private FindPersonUseCase findPersonUseCase;
+    private FindPersonCiudad findpersonCiudad;
     private String idUser;
    
-    public PersonUi(CreatePersonUseCase createPersonUseCase, FindPersonUseCase findPersonUseCase) {
+    public PersonUi(CreatePersonUseCase createPersonUseCase, FindPersonUseCase findPersonUseCase,FindPersonCiudad fpc) {
         this.createPersonUseCase = createPersonUseCase;
         this.findPersonUseCase = findPersonUseCase;
+        this.findpersonCiudad = fpc;
     }
 
     public void start() {
@@ -28,20 +31,14 @@ public class PersonUi {
         person.setIdciudad(Integer.parseInt(JOptionPane.showInputDialog(null,"Ingrese Id Ciudad de la Persona")));        
         createPersonUseCase.execute(person);
     }
-    public Person findPerson() {
+    public Optional<Person> findPerson() {
         idUser = JOptionPane.showInputDialog(null,"Ingrese el ID del Usuario: ");
-        Person person = findPersonUseCase.execute(idUser);
-        if (person != null) {
-            JOptionPane.showMessageDialog(null, "Persona encontrada: \n" +
-                    "ID: " + person.getId() + "\n" +
-                    "Nombre: " + person.getNombre() + "\n" +
-                    "Apellido: " + person.getApellido() + "\n" +
-                    "Edad: " + person.getEdad() + "\n" +
-                    "Email: " + person.getEmail() + "\n" +
-                    "ID Ciudad: " + person.getIdciudad());
-        } else {
-            JOptionPane.showMessageDialog(null, "Persona no encontrada");
-        }
+        Optional<Person> person = findPersonUseCase.execute(idUser);
+        return person;
+    }
+    public Optional<PersonaDto> findPersonCiudad() {
+        idUser = JOptionPane.showInputDialog(null,"Ingrese el ID del Usuario: ");
+        Optional<PersonaDto> person = findpersonCiudad.execute(idUser);
         return person;
     }
 }
