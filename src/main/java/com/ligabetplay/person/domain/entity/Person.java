@@ -9,6 +9,16 @@ public class Person {
     private int idciudad;
     public Person() {
     }
+    
+    public Person(String id, String nombre, String apellido, int edad, String email, int idciudad) {
+        this.id = id;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.edad = edad;
+        this.email = email;
+        this.idciudad = idciudad;
+    }
+
     public String getId() {
         return id;
     }

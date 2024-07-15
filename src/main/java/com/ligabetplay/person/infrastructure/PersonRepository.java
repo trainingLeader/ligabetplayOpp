@@ -3,9 +3,12 @@ package com.ligabetplay.person.infrastructure;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
+import java.sql.Statement;
 
 import com.ligabetplay.person.domain.entity.Person;
 import com.ligabetplay.person.domain.service.PersonService;
@@ -32,8 +35,12 @@ public class PersonRepository implements PersonService {
             String query = "INSERT INTO persona (id,nombre,apellido,edad,email,idciudad) VALUES (?,?,?,?,?,?)";
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, person.getId());
-            ps.executeUpdate();
-            
+            ps.setString(2, person.getNombre());
+            ps.setString(3, person.getApellido());
+            ps.setInt(4, person.getEdad());
+            ps.setString(5, person.getEmail());
+            ps.setInt(6, person.getIdciudad());
+            ps.executeUpdate();            
         } catch (SQLException e) {
             // TODO: handle exception
         }
@@ -53,8 +60,20 @@ public class PersonRepository implements PersonService {
 
     @Override
     public Person findPersonById(String id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findPersonById'");
+        String query = "SELECT id, nombre, apellido, email, edad, idciudad FROM persona WHERE id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        Person person = new Person(rs.getString("id"), rs.getString("nombre"), rs.getString("apellido"), rs.getInt("edad"), rs.getString("email"), rs.getInt("idciudad"));
+                        return person;
+                    }
+                }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
