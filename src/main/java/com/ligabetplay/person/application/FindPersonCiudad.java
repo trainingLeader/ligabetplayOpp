@@ -2,7 +2,7 @@ package com.ligabetplay.person.application;
 
 import java.util.Optional;
 
-import com.ligabetplay.person.domain.entity.PersonaDto;
+import com.ligabetplay.person.domain.entity.PersonDto;
 import com.ligabetplay.person.domain.service.PersonService;
 
 public class FindPersonCiudad {
@@ -12,7 +12,7 @@ public class FindPersonCiudad {
         this.personService = personService;
     }
 
-    public Optional<PersonaDto> execute(String id) {
+    public Optional<PersonDto> execute(String id) {
         return personService.findPersonByIdCiudad(id);
     }
 }

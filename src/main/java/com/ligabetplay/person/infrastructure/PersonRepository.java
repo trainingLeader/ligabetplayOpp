@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.Properties;
 
 import com.ligabetplay.person.domain.entity.Person;
-import com.ligabetplay.person.domain.entity.PersonaDto;
+import com.ligabetplay.person.domain.entity.PersonDto;
 import com.ligabetplay.person.domain.service.PersonService;
 
 public class PersonRepository implements PersonService {
@@ -83,8 +83,8 @@ public class PersonRepository implements PersonService {
     }
 
     @Override
-    public Optional<PersonaDto> findPersonByIdCiudad(String id) {
-        String query = "SELECT p.id, p.nombre, p.apellido, p.email, p.edad, p.idciudad,c.nombre " +
+    public Optional<PersonDto> findPersonByIdCiudad(String id) {
+        String query = "SELECT p.nombre, p.apellido,c.nombre " +
                         "FROM persona as p " + 
                         "join ciudad as c on p.idciudad = c.id WHERE p.id = ?";
         try {
@@ -92,7 +92,7 @@ public class PersonRepository implements PersonService {
             ps.setString(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
-                        PersonaDto person = new PersonaDto(rs.getString("p.id"), rs.getString("p.nombre"), rs.getString("p.apellido"), rs.getInt("p.edad"), rs.getString("p.email"), rs.getString("c.nombre"));
+                        PersonDto person = new PersonDto(rs.getString("p.nombre"), rs.getString("p.apellido"), rs.getString("c.nombre"));
                         return Optional.of(person);
                     }
                 }

@@ -12,7 +12,7 @@ import com.ligabetplay.person.application.CreatePersonUseCase;
 import com.ligabetplay.person.application.FindPersonCiudad;
 import com.ligabetplay.person.application.FindPersonUseCase;
 import com.ligabetplay.person.domain.entity.Person;
-import com.ligabetplay.person.domain.entity.PersonaDto;
+import com.ligabetplay.person.domain.entity.PersonDto;
 
 public class PersonUi {
     private CreatePersonUseCase createPersonUseCase;
@@ -61,7 +61,7 @@ public class PersonUi {
         topPanel.add(Box.createRigidArea(new Dimension(0, 2))); // Espacio vertical
 
         JTextField txtNombre = new JTextField();
-        txtNombre.setFont(new Font("Arial", Font.PLAIN, 18));
+        txtNombre.setFont(new Font("Gadugi", Font.PLAIN, 18));
         txtNombre.setPreferredSize(new Dimension(450, 40));
         topPanel.add(txtNombre);
         topPanel.add(Box.createRigidArea(new Dimension(0, 5))); // Espacio vertical
@@ -113,7 +113,7 @@ public class PersonUi {
             public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
                 if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
-                    JOptionPane.showMessageDialog(frame, "Campo solo numero", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(frame, "Campo solo numeros", "Error", JOptionPane.ERROR_MESSAGE);
                     e.consume(); // Ignorar la tecla no numérica
                 }
             }
@@ -134,6 +134,21 @@ public class PersonUi {
         bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
         // Crear los botones y añadirlos al bottomPanel
+        JButton saveButton = new JButton("Guardar datos");
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Person person = new Person();
+                person.setId(txtId.getText());
+                person.setNombre(txtNombre.getText());
+                person.setApellido(txtApellidos.getText());
+                person.setEmail(txtEmail.getText());
+                person.setEdad(Integer.parseInt(txtEdad.getText()));
+                person.setIdciudad(1);
+                createPersonUseCase.execute(person);
+            }
+        });
+
         JButton closeButton = new JButton("Cerrar");
         closeButton.addActionListener(new ActionListener() {
             @Override
@@ -141,7 +156,10 @@ public class PersonUi {
                 frame.dispose(); // Cerrar el JFrame
             }
         });
+
+        bottomPanel.add(saveButton);
         bottomPanel.add(closeButton);
+
 
         // Añadir el bottomPanel al JFrame en la posición SOUTH
         frame.add(bottomPanel, BorderLayout.SOUTH);
@@ -149,31 +167,6 @@ public class PersonUi {
         frame.setLocationRelativeTo(null);
         // Hacer visible el JFrame
         frame.setVisible(true);
-        // txtId.setPreferredSize(new Dimension(300, 50));
-        // JLabel lblNombre = new JLabel("Nombre:");
-        // JTextField txtNombre = new JTextField();
-        // JLabel lblApellidos = new JLabel("Apellidos:");
-        // JTextField txtApellidos = new JTextField();
-        // JLabel lblEdad = new JLabel("Edad:");
-        // JTextField txtEdad = new JTextField();
-        // panel.setPreferredSize(new Dimension(350, 120));
-
-        // panel.add(lblId);
-        // panel.add(txtId);
-        // panel.add(lblNombre);
-        // panel.add(txtNombre);
-        // panel.add(lblApellidos);
-        // panel.add(txtApellidos);
-        // panel.add(lblEdad);
-        // panel.add(txtEdad);
-        // int option = JOptionPane.showConfirmDialog(
-        // null,
-        // panel,
-        // "Registro de personas",
-        // JOptionPane.OK_CANCEL_OPTION,
-        // JOptionPane.QUESTION_MESSAGE
-        // );
-
     }
 
     public void start() {
@@ -193,9 +186,9 @@ public class PersonUi {
         return person;
     }
 
-    public Optional<PersonaDto> findPersonCiudad() {
+    public Optional<PersonDto> findPersonCiudad() {
         idUser = JOptionPane.showInputDialog(null, "Ingrese el ID del Usuario: ");
-        Optional<PersonaDto> person = findpersonCiudad.execute(idUser);
+        Optional<PersonDto> person = findpersonCiudad.execute(idUser);
         return person;
     }
 }
