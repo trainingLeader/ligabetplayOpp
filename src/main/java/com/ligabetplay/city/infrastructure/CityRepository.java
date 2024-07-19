@@ -63,8 +63,8 @@ public class CityRepository implements CityService {
     }
 
     @Override
-    public Optional<List<City>> findAllCities() {
-        String query = "SELECT id, nombre, idregion" +
+    public List<City> findAllCities() {
+        String query = "SELECT id, nombre, idregion " +
                         "FROM ciudad";
         List<City> lstCities = new ArrayList<>();
 
@@ -75,12 +75,12 @@ public class CityRepository implements CityService {
                         City city = new City(rs.getInt("id"), rs.getString("nombre"), rs.getInt("idregion"));
                         lstCities.add(city);
                     }
-                    return Optional.of(lstCities);
+                    return lstCities;
                 }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return Optional.empty();
+        return lstCities = new ArrayList<>();
     }
 
 }

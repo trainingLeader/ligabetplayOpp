@@ -14,7 +14,7 @@ public class FindAllCitiesUseCase {
         this.cityservice = cityservice;
     }
 
-    public Optional<List<City>> execute(String id) {
+    public List<City> execute() {
         return cityservice.findAllCities();
     }
 }

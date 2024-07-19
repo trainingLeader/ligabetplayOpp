@@ -10,5 +10,5 @@ public interface CityService {
     void updateCity(City persona);
     City deleteCity(int id);
     Optional<City> findPersonById(int id);
-    Optional<List<City>> findAllCities();
+    List<City> findAllCities();
 }

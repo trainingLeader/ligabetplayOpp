@@ -6,6 +6,12 @@ public class City {
     private int idregion;
     public City() {
     }
+    
+    public City(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public City(int id, String name, int idregion) {
         this.id = id;
         this.name = name;

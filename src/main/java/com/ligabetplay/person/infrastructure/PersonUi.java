@@ -1,13 +1,20 @@
 package com.ligabetplay.person.infrastructure;
 
-import java.util.Optional;
 import javax.swing.*;
 import java.awt.*;
+import java.util.*;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+import com.ligabetplay.city.application.FindAllCitiesUseCase;
+import com.ligabetplay.city.domain.entity.City;
+import com.ligabetplay.city.domain.service.CityService;
+import com.ligabetplay.city.infrastructure.CityRepository;
+import com.ligabetplay.country.domain.service.CountryService;
+import com.ligabetplay.country.infrastructure.CountryRepository;
 import com.ligabetplay.person.application.CreatePersonUseCase;
 import com.ligabetplay.person.application.FindPersonCiudad;
 import com.ligabetplay.person.application.FindPersonUseCase;
@@ -28,6 +35,8 @@ public class PersonUi {
     }
 
     public void frmRegPerson() {
+        CityService cityService = new CityRepository();
+        FindAllCitiesUseCase findAllCitiesUseCase = new FindAllCitiesUseCase(cityService);
         // Crear el JFrame
         JFrame frame = new JFrame("Registro de Personas");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -127,6 +136,27 @@ public class PersonUi {
                 }
             }
         });
+
+        JLabel lblCiudad = new JLabel("Seleccione una ciudad");
+        lblCiudad.setFont(new Font("Arial", Font.PLAIN, 18));
+        lblCiudad.setPreferredSize(new Dimension(100, 20));
+        lblCiudad.setMaximumSize(new Dimension(450, 40));
+        topPanel.add(lblCiudad);
+        topPanel.add(Box.createRigidArea(new Dimension(0, 2))); // Espacio vertical
+
+        JComboBox<String> cboCiudades = new JComboBox<String>();
+        cboCiudades.setFont(new Font("Arial", Font.PLAIN, 18));
+        cboCiudades.setPreferredSize(new Dimension(150, 40));
+        cboCiudades.setMaximumSize(new Dimension(150, 40));
+        topPanel.add(cboCiudades);
+        topPanel.add(Box.createRigidArea(new Dimension(0, 2))); // Espacio vertical
+
+        List<City> cities = new ArrayList<>();
+        cities = findAllCitiesUseCase.execute();
+        for (City city : cities) {
+            cboCiudades.addItem(city.getName());
+        }
+   
         // Añadir el topPanel al JFrame en la posición NORTH
         frame.add(topPanel, BorderLayout.NORTH);
         // Crear el JPanel inferior con FlowLayout para los botones
